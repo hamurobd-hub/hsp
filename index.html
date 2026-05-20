@@ -794,7 +794,7 @@ textarea { resize: vertical; min-height: 110px; }
 <div id="page-test" class="page">
   <div class="progress-sticky no-print">
     <div class="progress-meta">
-      <span class="progress-q" id="q-counter">Q1 / 50</span>
+      <span class="progress-q" id="q-counter">Q1 / 45</span>
       <span class="progress-pct" id="q-pct">0%</span>
     </div>
     <div class="progress-track">
@@ -853,14 +853,14 @@ textarea { resize: vertical; min-height: 110px; }
   </div>
 
   <!-- サブタイプ -->
-  <div class="card">
+  <div class="card" id="card-subtype">
     <div class="section-label">🧬 HSPサブタイプ</div>
     <div class="subtype-hero" id="subtype-hero"></div>
     <div class="subtype-row" id="subtype-row"></div>
   </div>
 
   <!-- 強み -->
-  <div class="card">
+  <div class="card" id="card-strengths">
     <div class="section-label">💪 あなたの強み TOP3</div>
     <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">HSPが持つ生存戦略としての才能</p>
     <div id="strengths"></div>
@@ -1423,6 +1423,16 @@ function showResult(){
     </div>`).join('');
 
   // 解説
+  // 花タイプで表示制御
+  const isOrchid = r.flower === 'orchid';
+
+  // サブタイプカード：Orchidのみ表示
+  document.getElementById('card-subtype').style.display = isOrchid ? '' : 'none';
+
+  // 強みカード：Orchidのみ表示
+  document.getElementById('card-strengths').style.display = isOrchid ? '' : 'none';
+
+  // 詳細解説（内容は花タイプ別）
   document.getElementById('analysis').innerHTML=makeAnalysis(r);
 
   // アドバイス
