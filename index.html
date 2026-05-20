@@ -676,8 +676,38 @@ textarea { resize: vertical; min-height: 110px; }
         <svg width="70" height="70" viewBox="0 0 70 70" style="animation:floatY 3s ease-in-out infinite">
           <!-- タンポポ（イントロ代表花） -->
           <g transform="translate(35,35)">
-            ${Array.from({length:16},(_,i)=>{const a=(i/16)*Math.PI*2;return`<line x1="${(10*Math.cos(a)).toFixed(1)}" y1="${(10*Math.sin(a)).toFixed(1)}" x2="${(22*Math.cos(a)).toFixed(1)}" y2="${(22*Math.sin(a)).toFixed(1)}" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>`}).join('')}
-            ${Array.from({length:16},(_,i)=>{const a=(i/16)*Math.PI*2;return`<circle cx="${(23.5*Math.cos(a)).toFixed(1)}" cy="${(23.5*Math.sin(a)).toFixed(1)}" r="2.5" fill="#bfdbfe"/>`}).join('')}
+            <line x1="10.0" y1="0.0" x2="22.0" y2="0.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="9.2" y1="3.8" x2="20.3" y2="8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="7.1" y1="7.1" x2="15.6" y2="15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3.8" y1="9.2" x2="8.4" y2="20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="0.0" y1="10.0" x2="0.0" y2="22.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-3.8" y1="9.2" x2="-8.4" y2="20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-7.1" y1="7.1" x2="-15.6" y2="15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-9.2" y1="3.8" x2="-20.3" y2="8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-10.0" y1="0.0" x2="-22.0" y2="0.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-9.2" y1="-3.8" x2="-20.3" y2="-8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-7.1" y1="-7.1" x2="-15.6" y2="-15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-3.8" y1="-9.2" x2="-8.4" y2="-20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="-0.0" y1="-10.0" x2="-0.0" y2="-22.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3.8" y1="-9.2" x2="8.4" y2="-20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="7.1" y1="-7.1" x2="15.6" y2="-15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="9.2" y1="-3.8" x2="20.3" y2="-8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="23.5" cy="0.0" r="2.5" fill="#bfdbfe"/>
+            <circle cx="21.7" cy="9.0" r="2.5" fill="#bfdbfe"/>
+            <circle cx="16.6" cy="16.6" r="2.5" fill="#bfdbfe"/>
+            <circle cx="9.0" cy="21.7" r="2.5" fill="#bfdbfe"/>
+            <circle cx="0.0" cy="23.5" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-9.0" cy="21.7" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-16.6" cy="16.6" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-21.7" cy="9.0" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-23.5" cy="0.0" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-21.7" cy="-9.0" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-16.6" cy="-16.6" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-9.0" cy="-21.7" r="2.5" fill="#bfdbfe"/>
+            <circle cx="-0.0" cy="-23.5" r="2.5" fill="#bfdbfe"/>
+            <circle cx="9.0" cy="-21.7" r="2.5" fill="#bfdbfe"/>
+            <circle cx="16.6" cy="-16.6" r="2.5" fill="#bfdbfe"/>
+            <circle cx="21.7" cy="-9.0" r="2.5" fill="#bfdbfe"/>
             <circle r="11" fill="#2563eb"/>
             <circle r="7" fill="#3b82f6"/>
             <circle cx="-2.5" cy="-2" r="1.5" fill="white"/>
@@ -1181,11 +1211,11 @@ function makeAnalysis(r){
     LST:'光・音・触覚・気温といった物理的刺激への感受性が非常に高く、精密な神経センサーを持っています（Takasugi, 2022）。',
   }[domSub];
 
-  return \`
+  return `
 <div class="analysis-block">
   <div class="analysis-heading">あなたの感受性プロファイル</div>
   <div class="analysis-text">
-    <p>今回の総合スコアは<strong>\${pct}%（\${flowerName}タイプ）</strong>でした。4軸の中でも特に<strong>\${maxName}</strong>が高く、サブタイプは<strong>\${subLabel}</strong>が最も顕著に現れています。\${subSent}</p>
+    <p>今回の総合スコアは<strong>${pct}%（${flowerName}タイプ）</strong>でした。4軸の中でも特に<strong>${maxName}</strong>が高く、サブタイプは<strong>${subLabel}</strong>が最も顕著に現れています。${subSent}</p>
     <p>エレイン・アーロン博士が1997年に定義したHSP（Highly Sensitive Person）は、「刺激に弱い」だけではなく、DOESモデルが示す4軸——情報の深い処理・過剰刺激への反応・豊かな感情と共感・些細な変化への気づき——が組み合わさった多面的な気質です。SPSは物理刺激への過敏さ（LST）・感情的反応（EOE）・芸術や美への感受性（AES）という3因子でも捉えられ（Aron et al., 2012）、どの軸が強いかは人によって大きく異なります。</p>
   </div>
 </div>
@@ -1200,9 +1230,9 @@ function makeAnalysis(r){
   <div class="analysis-heading">バンテージ・センシティビティ——良い環境での飛躍的成長</div>
   <div class="analysis-text">
     <p>Pluess & Belsky（2013）が提唱した「バンテージ・センシティビティ」理論は、高感受性者が悪い環境の影響を強く受ける一方、<strong>良い環境・肯定的体験の恩恵も他の人より大きく受け取れる</strong>ことを示しています。Pluess & Boniwell（2015）のスクール介入研究では、感受性の高い女子生徒が心理プログラムから最も大きな効果を得ることが実証されました。</p>
-    <p>Lionetti et al.（2018）はN=906の成人サンプルを用いた分析から、Orchid（高感受性・31%）・Tulip（中感受性・40%）・Dandelion（低感受性・29%）という3グループを統計的に同定しました。あなたのタイプ（<strong>\${flowerName}</strong>）はこのモデルに基づいています。繊細さを弱さではなく、正しい環境があれば最大限に開花する才能として受け止めることが、より楽に生きる第一歩です。</p>
+    <p>Lionetti et al.（2018）はN=906の成人サンプルを用いた分析から、Orchid（高感受性・31%）・Tulip（中感受性・40%）・Dandelion（低感受性・29%）という3グループを統計的に同定しました。あなたのタイプ（<strong>${flowerName}</strong>）はこのモデルに基づいています。繊細さを弱さではなく、正しい環境があれば最大限に開花する才能として受け止めることが、より楽に生きる第一歩です。</p>
   </div>
-</div>\`;
+</div>`;
 }
 
 // ================================================
