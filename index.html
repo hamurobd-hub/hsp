@@ -1475,45 +1475,54 @@ function submitAndSave(){
   // ボタン無効化
   btn.disabled = true;
   btn.textContent = '送信中...';
-
-  // 送信中ステータス
   status.className = 'send-status sending';
   status.textContent = '⏳ Google Formsに送信しています...';
 
-  // Google Forms に fetch で送信（no-cors）
-  const formData = new FormData();
-  formData.append('entry.2020483139', imp);
+  // URLSearchParams で送信（Google Formsと最も互換性が高い）
+  const params = new URLSearchParams();
+  params.append('entry.2020483139', imp);
 
-  // 診断結果を追加送信
+  // 診断結果を追加
   if(lastResult){
-    const flowerLabel = {orchid:'Orchid（蘭）',tulip:'Tulip（チューリップ）',dandelion:'Dandelion（タンポポ）'}[lastResult.flower] || '';
-    const pct = Math.round(((lastResult.total-1)/4)*100);
-    const subLabel = {AES:'AES（芸術・洞察特化型）',EOE:'EOE（感情・共感特化型）',LST:'LST（感覚過敏型）'}[lastResult.domSub] || '';
-    formData.append('entry.682297177',  flowerLabel);
-    formData.append('entry.1932758670', pct + '%');
-    formData.append('entry.1810020095', lastResult.D.toFixed(2));
-    formData.append('entry.1458114308', lastResult.O.toFixed(2));
-    formData.append('entry.200416012',  lastResult.E.toFixed(2));
-    formData.append('entry.622069769',  lastResult.S.toFixed(2));
-    formData.append('entry.137346586',  subLabel);
+    const flowerLabel = {
+      orchid:    'Orchid（蘭）',
+      tulip:     'Tulip（チューリップ）',
+      dandelion: 'Dandelion（タンポポ）'
+    }[lastResult.flower] || '';
+    const pct = Math.round(((lastResult.total - 1) / 4) * 100);
+    const subLabel = {
+      AES: 'AES（芸術・洞察特化型）',
+      EOE: 'EOE（感情・共感特化型）',
+      LST: 'LST（感覚過敏型）'
+    }[lastResult.domSub] || '';
+
+    params.append('entry.682297177',  flowerLabel);
+    params.append('entry.1932758670', pct + '%');
+    params.append('entry.1810020095', lastResult.D.toFixed(2));
+    params.append('entry.1458114308', lastResult.O.toFixed(2));
+    params.append('entry.200416012',  lastResult.E.toFixed(2));
+    params.append('entry.622069769',  lastResult.S.toFixed(2));
+    params.append('entry.137346586',  subLabel);
   }
 
-  fetch('https://docs.google.com/forms/d/e/1FAIpQLSetfTk60F-ieGuWp6hDJ3P0HLKUDayTGbiEGiI7PV46w1hUkg/formResponse', {
-    method: 'POST',
-    mode: 'no-cors',
-    body: formData,
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSetfTk60F-ieGuWp6hDJ3P0HLKUDayTGbiEGiI7PV46w1hUkg/formResponse';
+
+  fetch(FORM_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body:    params.toString(),
   })
   .then(() => {
-    // no-corsのため成功/失敗を判定できないが、エラーがなければ送信成功とみなす
     status.className = 'send-status sent';
     status.textContent = '✅ 感想を送信しました。ありがとうございます！';
     btn.textContent = '📄 PDFを保存する';
     btn.disabled = false;
     btn.onclick = doPDF;
-    // 自動的にPDF保存へ
     setTimeout(doPDF, 800);
   })
-  .catch(() => {
+  .catch((e) => {
+    console.error('送信エラー:', e);
     status.className = 'send-status error';
     status.textContent = '⚠️ 送信に失敗しました。PDFの保存は続けられます。';
     btn.textContent = '📄 PDFを保存する';
