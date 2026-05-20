@@ -873,7 +873,7 @@ textarea { resize: vertical; min-height: 110px; }
   </div>
 
   <!-- アドバイス -->
-  <div class="card">
+  <div class="card" id="card-advice">
     <div class="section-label">🌱 アクションプラン</div>
     <div id="advice"></div>
   </div>
@@ -1426,11 +1426,10 @@ function showResult(){
   // 花タイプで表示制御
   const isOrchid = r.flower === 'orchid';
 
-  // サブタイプカード：Orchidのみ表示
-  document.getElementById('card-subtype').style.display = isOrchid ? '' : 'none';
-
-  // 強みカード：Orchidのみ表示
+  // Orchidのみ表示するカード
+  document.getElementById('card-subtype').style.display  = isOrchid ? '' : 'none';
   document.getElementById('card-strengths').style.display = isOrchid ? '' : 'none';
+  document.getElementById('card-advice').style.display    = isOrchid ? '' : 'none';
 
   // 詳細解説（内容は花タイプ別）
   document.getElementById('analysis').innerHTML=makeAnalysis(r);
