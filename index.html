@@ -606,7 +606,7 @@ textarea { resize: vertical; min-height: 110px; }
   margin-bottom: 14px;
 }
 
-/* PDF保存成功メッセージ */
+/* 送信・保存メッセージ */
 .save-success {
   display: none;
   background: #f0fdf4;
@@ -620,6 +620,33 @@ textarea { resize: vertical; min-height: 110px; }
   margin-bottom: 12px;
 }
 .save-success.show { display: block; animation: fadeUp .3s ease both; }
+.send-status {
+  display: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.send-status.sending {
+  display: block;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  color: var(--blue);
+}
+.send-status.sent {
+  display: block;
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  color: #15803d;
+}
+.send-status.error {
+  display: block;
+  background: #fff1f2;
+  border: 1.5px solid #fecdd3;
+  color: #be123c;
+}
 
 /* 免責 */
 .disclaimer {
@@ -851,20 +878,20 @@ textarea { resize: vertical; min-height: 110px; }
     <div id="advice"></div>
   </div>
 
-  <!-- 感想 & PDF -->
+  <!-- 感想 & PDF & Google Forms送信 -->
   <div class="feedback-section no-print">
-    <div class="feedback-title">📄 結果を保存する</div>
+    <div class="feedback-title">💬 感想を送る・結果を保存する</div>
     <div class="feedback-sub">
-      感想を記入のうえ、「PDFを保存」ボタンで結果をダウンロードできます。
+      感想をご記入のうえ送信してください。PDFとして保存することもできます。
     </div>
 
     <div class="privacy-note">
       🔒 <strong>感想の取り扱いについて</strong><br>
-      入力していただいた感想は、今後のアップデートや、個人情報に配慮した上で<strong>「ユーザーの感想」として著者により紹介させていただく場合があります</strong>。<strong>メールアドレスの収集は行いません</strong>。PDFへの出力以外での外部送信・自動記録は一切行いません。
+      入力していただいた感想は、今後のアップデートや、個人情報に配慮した上で<strong>「ユーザーの感想」として著者により紹介させていただく場合があります</strong>。<strong>メールアドレスの収集は行いません</strong>。送信はGoogle Formsを経由します。
     </div>
 
     <label for="input-impression">
-      診断を受けての感想・気づき
+      診断を受けての感想・気づきをお聞かせください
       <span>必須</span>
     </label>
     <textarea
@@ -876,12 +903,13 @@ textarea { resize: vertical; min-height: 110px; }
     <div class="char-count"><span id="char-count">0</span> / 500文字</div>
     <div class="field-error" id="error-impression">感想を入力してください（必須）</div>
 
+    <div class="send-status" id="send-status"></div>
     <div class="save-success" id="save-success">
       ✅ PDFの準備ができました。印刷ダイアログから「PDFに保存」を選んでください。
     </div>
 
-    <button class="btn btn-primary" onclick="savePDF()" style="margin-bottom:10px;">
-      📄 PDFとして保存する
+    <button class="btn btn-primary" onclick="submitAndSave()" style="margin-bottom:10px;" id="btn-submit">
+      📨 感想を送信してPDFを保存する
     </button>
     <button class="btn btn-outline" onclick="restartTest()">
       もう一度診断する
@@ -1191,46 +1219,83 @@ function drawRadar(sc){
 }
 
 // ================================================
-// ANALYSIS TEXT (~1000字) ── 最新研究反映版
+// ANALYSIS TEXT — スコア完全連動パーソナライズ版
 // ================================================
 function makeAnalysis(r){
-  const {D,O,E,S,total,domSub,flower,isHSP} = r;
+  const {D,O,E,S,total,domSub,flower,isHSP,ss} = r;
   const pct = Math.round(((total-1)/4)*100);
   const flowerName = {orchid:'Orchid（蘭）',tulip:'Tulip（チューリップ）',dandelion:'Dandelion（タンポポ）'}[flower];
+
+  // ── 最強軸を特定 ──
   const maxKey = ['D','O','E','S'].reduce((a,b)=>({D,O,E,S}[a]>({D,O,E,S})[b]?a:b));
-  const maxName = {
-    D:'情報を深く処理するD軸（Depth of Processing）',
-    O:'過剰刺激されやすいO軸（Overstimulation）',
-    E:'感情・共感のE軸（Emotional Reactivity & Empathy）',
-    S:'些細な変化への察知力S軸（Sensitivity to Subtleties）'
-  }[maxKey];
-  const subLabel = {AES:'芸術・洞察特化型（AES）',EOE:'感情・共感特化型（EOE）',LST:'感覚過敏型（LST）'}[domSub];
-  const subSent = {
-    AES:'美しさや意味あるものへの反応が強く、芸術・音楽・自然から深いインスピレーションを受け取る力が際立っています（Lionetti et al., 2018）。',
-    EOE:'他者の感情を自分のことのように受け取り、その場の空気を瞬時に読む共感力が突出しています（Acevedo et al., 2014）。',
-    LST:'光・音・触覚・気温といった物理的刺激への感受性が非常に高く、精密な神経センサーを持っています（Takasugi, 2022）。',
-  }[domSub];
+  const minKey = ['D','O','E','S'].reduce((a,b)=>({D,O,E,S}[a]<({D,O,E,S})[b]?a:b));
+  const scores = {D,O,E,S};
+
+  // ── セクション1: プロファイル文（花タイプ × 最強軸 で分岐）──
+  const profileByFlower = {
+    orchid: {
+      D: `あなたは情報を極めて深く処理するOrchid（蘭）タイプです。総合スコア${pct}%は全体の上位層に位置し、D軸（${D.toFixed(1)}）が特に突出しています。些細な決定でも無数の可能性を検討し、他者が気づかない視点から物事を掘り下げる——この「深さ」こそがあなたの最大の特性です。複雑な夢を見たり、ミスを長く引きずったりするのも、脳が常に高回転で処理を続けているためです。`,
+      O: `あなたは環境の影響を最も強く受けるOrchid（蘭）タイプです。総合スコア${pct}%で、O軸（${O.toFixed(1)}）が際立っています。人混み・騒音・強い光といった刺激が神経系に大きく響き、疲弊しやすい一方、静かで安全な環境では他の誰よりも深く集中できます。「疲れすぎて眠れない」過覚醒状態は、神経系がオーバーヒートしているサインです。`,
+      E: `あなたは感情と共感において最も敏感なOrchid（蘭）タイプです。総合スコア${pct}%で、E軸（${E.toFixed(1)}）が全軸中最高値です。他者の感情を自分のこととして吸収し、場の空気を瞬時に読み取る力は、人口の上位数%に入る感受性です。この共感力は稀有な才能ですが、同時に感情的な疲弊も招きやすいため、意識的なケアが重要です。`,
+      S: `あなたは些細な変化を誰よりも早く察知するOrchid（蘭）タイプです。総合スコア${pct}%で、S軸（${S.toFixed(1)}）が最も高く出ています。職場の空気の変化、相手の微妙な表情、環境の改善点——他者がスルーする情報を脳が自動的に拾い上げます。この「高精度センサー」は、リスク察知や品質管理において非常に強力な武器になります。`,
+    },
+    tulip: {
+      D: `あなたは感受性と安定性のバランスを持つTulip（チューリップ）タイプです。総合スコア${pct}%で、D軸（${D.toFixed(1)}）が最も高く、物事を深く考え抜く力が際立っています。極端な過剰刺激には陥りにくい一方で、思考の深さと洞察力はHSPの特性をしっかり備えています。状況に応じて感受性のオン・オフを切り替えられる柔軟さも持ち合わせています。`,
+      O: `あなたは適度な感受性と柔軟性を持つTulip（チューリップ）タイプです。総合スコア${pct}%で、O軸（${O.toFixed(1)}）が高めに出ています。刺激に圧倒されることはあっても、回復力も備えており、環境への適応がHigh-Sensitiveな人の中では比較的得意です。多忙な日が続いたときは意識的に「静かな時間」を確保することが鍵になります。`,
+      E: `あなたは感受性と安定のバランスが取れたTulip（チューリップ）タイプです。総合スコア${pct}%で、E軸（${E.toFixed(1)}）が最も高く、他者への共感と感情の豊かさが特徴です。深く感じながらも感情に飲み込まれすぎない耐性も持っており、共感力を対人関係や仕事に活かしやすいポジションにいます。`,
+      S: `あなたは環境への感受性と適応力を併せ持つTulip（チューリップ）タイプです。総合スコア${pct}%で、S軸（${S.toFixed(1)}）が最も高く、些細な変化への気づきが優れています。Orchidほど刺激に圧倒されず、Dandelionほど鈍感でもない——この中間の特性が、多くの場面で安定したパフォーマンスを発揮する土台になっています。`,
+    },
+    dandelion: {
+      D: `あなたは外部環境に左右されにくいDandelion（タンポポ）タイプです。総合スコア${pct}%で、4軸の中ではD軸（${D.toFixed(1)}）が相対的に高く、思考の深さという形でHSPの特性が現れています。物理的な刺激や感情的な消耗には強い一方、考えすぎや決断の遅さという形で深い処理の影響が出ることがあります。`,
+      O: `あなたは環境の変化に比較的強いDandelion（タンポポ）タイプです。総合スコア${pct}%で、O軸（${O.toFixed(1)}）がやや高めです。どんな状況でも踏ん張れるタフさを持ちながら、刺激が重なる場面では予想外の疲弊を感じることもあります。HSPの傾向は軽めですが、その分「なぜ自分だけが疲れるのか」と気づきにくい側面もあります。`,
+      E: `あなたは安定した神経系を持つDandelion（タンポポ）タイプです。総合スコア${pct}%で、E軸（${E.toFixed(1)}）が最も高く出ています。感情面での共感力は持ちながら、環境や物理刺激には動じにくいバランス型です。感受性の高さは主に対人関係や感情の読み取りに集中して現れるタイプです。`,
+      S: `あなたは全体的に安定した感受性を持つDandelion（タンポポ）タイプです。総合スコア${pct}%で、S軸（${S.toFixed(1)}）が相対的に高く、些細な変化への気づきという形でHSPの特性が現れています。タフで柔軟な神経系を持ちながら、環境の改善点や人間関係の微妙な変化に気づく鋭さも備えています。`,
+    },
+  };
+  const profileText = (profileByFlower[flower]||profileByFlower.tulip)[maxKey] || profileByFlower.tulip.D;
+
+  // ── セクション2: 脳科学（サブタイプ × 最強軸で分岐）──
+  const neuroBySubtype = {
+    EOE: `fMRIを用いたAcevedo et al.（2014）の研究では、感情写真への反応時にHSPは<strong>島皮質（insula）とミラーニューロン系</strong>が特に活性化することが示されています。あなたのE軸スコア（${E.toFixed(1)}）はこの特性を強く反映しており、他者の感情を文字通り「自分の感情として体験する」神経回路が活発です。誰かが怒られている場面を見て動揺したり、相手の嘘を直感的に察知したりするのは、この脳の仕組みによるものです。`,
+    AES: `Jagiellowicz et al.（2011）のfMRI研究では、HSPは視覚・注意処理に関わる脳領域をより広く活性化させ、細部への気づきが神経レベルで強化されていることが確認されています。あなたのAESスコア（${(r.ss&&r.ss.AES)?r.ss.AES.toFixed(1):'高'}）が示す芸術・洞察への深い感動は、この視覚処理の豊かさに由来します。音楽や絵画に触れて涙が出るのは「感受性が強すぎる」のではなく、脳の処理が他者より多層的であるためです。`,
+    LST: `Takasugi（2022）が日本人成人863名を対象に行った研究では、感覚処理感度（SPS）が高い人ほど胃腸症状（腹痛・下痢・消化不良など）との有意な関連が示されています。あなたのLSTスコアが高いことは、神経系が物理的刺激を非常に精密に処理していることを意味します。これは「気のせい」ではなく、<strong>神経系が環境情報を高密度で取り込む</strong>という身体レベルの特性です。`,
+  };
+  const neuroText = neuroBySubtype[domSub] || neuroBySubtype.EOE;
+
+  // ── セクション3: バンテージ（花タイプで分岐）──
+  const vantageByFlower = {
+    orchid: `Pluess & Belsky（2013）の「バンテージ・センシティビティ」理論によれば、Orchidタイプは悪い環境では最も大きなダメージを受ける一方、<strong>良い環境・肯定的な体験の恩恵も他の誰よりも大きく受け取れます</strong>。Lionetti et al.（2018）のN=906の研究で同定された高感受性グループ（31%）に属するあなたは、適切なサポート・安心できる人間関係・自分に合った働き方が揃ったとき、Tulipでも Dandelionでも到達できない深さと豊かさで開花します。環境を選ぶことは「わがまま」ではなく、才能を守るための戦略です。`,
+    tulip: `Pluess & Belsky（2013）の「バンテージ・センシティビティ」理論では、感受性の高さは悪い環境での傷つきやすさと同時に、良い環境での高い成長率をもたらすと示されています。Tulipタイプのあなたは中程度の感受性（Lionetti et al., 2018のN=906、40%）を持ち、環境への適応力と感受性の豊かさをバランスよく兼ね備えています。Orchidほど環境の影響を受けやすくはないものの、<strong>意図的に良い環境を選ぶことで着実に力を発揮できます</strong>。`,
+    dandelion: `Lionetti et al.（2018）が同定したDandelionタイプ（29%）は、どんな環境でも安定したパフォーマンスを維持できる強さが特徴です。Pluess & Belsky（2013）の「バンテージ・センシティビティ」の観点では、環境の影響を受けにくいということは、悪い環境でも折れにくい反面、良い環境の恩恵も比較的均一に受け取る傾向があります。あなたの強みは<strong>状況に左右されない安定した軸</strong>を持つことです。D軸（${D.toFixed(1)}）やS軸（${S.toFixed(1)}）など高い部分を意識的に活かす場を探しましょう。`,
+  };
+  const vantageText = vantageByFlower[flower] || vantageByFlower.tulip;
+
+  // ── 4軸バランスコメント（最強軸と最弱軸の差が大きい場合に追加）──
+  const spread = Math.max(D,O,E,S) - Math.min(D,O,E,S);
+  const balanceNote = spread >= 1.2
+    ? `<div class="analysis-quote">あなたの4軸スコアには${spread.toFixed(1)}ポイントの開きがあります（最高：${maxKey}軸 ${scores[maxKey].toFixed(1)} ／ 最低：${minKey}軸 ${scores[minKey].toFixed(1)}）。これは「物理刺激には強いが感情面は繊細」「思考は深いが過剰刺激は受けにくい」といったギャップを意味します。HSPの感受性は均一ではなく、あなたは特定の軸に集中した「偏った感受性」を持つタイプです。</div>`
+    : `<div class="analysis-quote">あなたの4軸スコアはD（${D.toFixed(1)}）・O（${O.toFixed(1)}）・E（${E.toFixed(1)}）・S（${S.toFixed(1)}）と比較的バランスが取れています。感受性が特定の軸だけに偏らず、全体的に均等に高い（または低い）タイプです。</div>`;
 
   return `
 <div class="analysis-block">
   <div class="analysis-heading">あなたの感受性プロファイル</div>
   <div class="analysis-text">
-    <p>今回の総合スコアは<strong>${pct}%（${flowerName}タイプ）</strong>でした。4軸の中でも特に<strong>${maxName}</strong>が高く、サブタイプは<strong>${subLabel}</strong>が最も顕著に現れています。${subSent}</p>
-    <p>エレイン・アーロン博士が1997年に定義したHSP（Highly Sensitive Person）は、「刺激に弱い」だけではなく、DOESモデルが示す4軸——情報の深い処理・過剰刺激への反応・豊かな感情と共感・些細な変化への気づき——が組み合わさった多面的な気質です。SPSは物理刺激への過敏さ（LST）・感情的反応（EOE）・芸術や美への感受性（AES）という3因子でも捉えられ（Aron et al., 2012）、どの軸が強いかは人によって大きく異なります。</p>
+    <p>${profileText}</p>
+    <p>エレイン・アーロン博士が1997年に定義したHSPは、DOESモデルが示す4軸——情報の深い処理・過剰刺激への反応・豊かな感情と共感・些細な変化への気づき——が組み合わさった多面的な気質です。SPSは物理刺激への過敏さ（LST）・感情的反応（EOE）・芸術や美への感受性（AES）の3因子でも捉えられ（Aron et al., 2012）、どの軸が強いかは人によって大きく異なります。</p>
+    ${balanceNote}
   </div>
 </div>
 <div class="analysis-block">
-  <div class="analysis-heading">脳科学が示すHSPの神経的基盤</div>
+  <div class="analysis-heading">脳科学が示す、あなたの神経的特性</div>
   <div class="analysis-text">
-    <p>fMRIを用いた研究（Jagiellowicz et al., 2011）では、HSPの脳は視覚・注意処理に関わる領域をより広く活性化させることが確認されています。さらにAcevedo et al.（2014）の研究では、感情写真への反応時にHSPは<strong>島皮質（insula）とミラーニューロン系</strong>が特に活性化し、他者の感情を文字通り追体験するように脳が反応することが示されています。「疲れすぎて眠れない」のは脳の過覚醒（オーバーアラウザル）が原因であり、「鮮明な夢を見る」のも睡眠中も情報処理が活発なHSP特有の現象です。</p>
-    <div class="analysis-quote">また日本人成人を対象にした研究（Takasugi, 2022, N=863）では、感受性処理感度が高いほど胃腸症状（腹痛・下痢・消化不良など）との有意な関連が示されており、SPSが心理面だけでなく<strong>身体的健康にも影響を与える</strong>ことが明らかになっています。</div>
+    <p>${neuroText}</p>
+    <p>「疲れすぎて眠れない」のは脳の過覚醒（オーバーアラウザル）が原因であり、「鮮明で複雑な夢を見る」のも睡眠中も情報処理が活発なHSP特有の現象です。これらはすべて、神経系が「より多くを感知し、より深く処理しようとする」という根本的な性質から来ています。</p>
   </div>
 </div>
 <div class="analysis-block">
-  <div class="analysis-heading">バンテージ・センシティビティ——良い環境での飛躍的成長</div>
+  <div class="analysis-heading">バンテージ・センシティビティ——あなたが開花する条件</div>
   <div class="analysis-text">
-    <p>Pluess & Belsky（2013）が提唱した「バンテージ・センシティビティ」理論は、高感受性者が悪い環境の影響を強く受ける一方、<strong>良い環境・肯定的体験の恩恵も他の人より大きく受け取れる</strong>ことを示しています。Pluess & Boniwell（2015）のスクール介入研究では、感受性の高い女子生徒が心理プログラムから最も大きな効果を得ることが実証されました。</p>
-    <p>Lionetti et al.（2018）はN=906の成人サンプルを用いた分析から、Orchid（高感受性・31%）・Tulip（中感受性・40%）・Dandelion（低感受性・29%）という3グループを統計的に同定しました。あなたのタイプ（<strong>${flowerName}</strong>）はこのモデルに基づいています。繊細さを弱さではなく、正しい環境があれば最大限に開花する才能として受け止めることが、より楽に生きる第一歩です。</p>
+    <p>${vantageText}</p>
   </div>
 </div>`;
 }
@@ -1331,10 +1396,13 @@ function updateCharCount(el){
   document.getElementById('char-count').textContent = el.value.length;
 }
 
-function savePDF(){
-  const imp = document.getElementById('input-impression').value.trim();
-  const err = document.getElementById('error-impression');
+function submitAndSave(){
+  const imp    = document.getElementById('input-impression').value.trim();
+  const err    = document.getElementById('error-impression');
+  const status = document.getElementById('send-status');
+  const btn    = document.getElementById('btn-submit');
 
+  // バリデーション
   if(!imp){
     err.classList.add('show');
     document.getElementById('input-impression').focus();
@@ -1342,17 +1410,51 @@ function savePDF(){
   }
   err.classList.remove('show');
 
+  // ボタン無効化
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+
+  // 送信中ステータス
+  status.className = 'send-status sending';
+  status.textContent = '⏳ Google Formsに送信しています...';
+
+  // Google Forms に fetch で送信（no-cors）
+  const formData = new FormData();
+  formData.append('entry.2020483139', imp);
+
+  fetch('https://docs.google.com/forms/d/e/1FAIpQLSetfTk60F-ieGuWp6hDJ3P0HLKUDayTGbiEGiI7PV46w1hUkg/formResponse', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: formData,
+  })
+  .then(() => {
+    // no-corsのため成功/失敗を判定できないが、エラーがなければ送信成功とみなす
+    status.className = 'send-status sent';
+    status.textContent = '✅ 感想を送信しました。ありがとうございます！';
+    btn.textContent = '📄 PDFを保存する';
+    btn.disabled = false;
+    btn.onclick = doPDF;
+    // 自動的にPDF保存へ
+    setTimeout(doPDF, 800);
+  })
+  .catch(() => {
+    status.className = 'send-status error';
+    status.textContent = '⚠️ 送信に失敗しました。PDFの保存は続けられます。';
+    btn.textContent = '📄 PDFを保存する';
+    btn.disabled = false;
+    btn.onclick = doPDF;
+  });
+}
+
+function doPDF(){
+  const imp = document.getElementById('input-impression').value.trim();
   // 印刷用ブロックに感想と日付を転記
   document.getElementById('print-impression-text').textContent = imp;
   const now = new Date();
   document.getElementById('print-date').textContent =
     `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
-
-  // 成功メッセージ
   document.getElementById('save-success').classList.add('show');
-
-  // 少し待ってから印刷ダイアログ
-  setTimeout(()=>window.print(), 600);
+  setTimeout(()=>window.print(), 500);
 }
 </script>
 </body>
