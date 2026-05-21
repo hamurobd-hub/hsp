@@ -5,34 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HSP型 感受性チェック</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Shippori+Mincho:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 /* =====================================================
    CSS VARIABLES & RESET
 ===================================================== */
 :root {
-  --blue:       #2563eb;
-  --blue-mid:   #3b82f6;
-  --blue-light: #93c5fd;
-  --blue-pale:  #dbeafe;
-  --blue-ultra: #eff6ff;
+  --ink:        #1a1612;
+  --paper:      #f5f0e8;
+  --cream:      #ede6d6;
+  --accent:     #7c5c3a;
+  --accent2:    #b08a5e;
+  --muted:      #8a7f72;
+  --soft:       #d4c9b5;
+  --border:     #c8bba8;
   --white:      #ffffff;
-  --gray-50:    #f8fafc;
-  --gray-100:   #f1f5f9;
-  --gray-200:   #e2e8f0;
-  --gray-400:   #94a3b8;
-  --gray-600:   #475569;
-  --gray-800:   #1e293b;
-  --text:       #1e293b;
-  --text-sub:   #475569;
-  --text-light: #94a3b8;
-  --border:     #dbeafe;
-  --shadow-sm:  0 1px 4px rgba(37,99,235,0.08);
-  --shadow-md:  0 4px 20px rgba(37,99,235,0.10);
-  --radius:     16px;
-  --radius-sm:  10px;
-  --font-body:  'Noto Sans JP', sans-serif;
+  --aes:        #5a7a6a;
+  --low:        #7a5a6a;
+  --exc:        #5a5a7a;
+  /* 旧変数の互換エイリアス */
+  --blue:       #7c5c3a;
+  --blue-mid:   #b08a5e;
+  --blue-light: #d4c9b5;
+  --blue-pale:  #ede6d6;
+  --blue-ultra: #f5f0e8;
+  --gray-50:    #f5f0e8;
+  --gray-100:   #ede6d6;
+  --gray-200:   #d4c9b5;
+  --gray-400:   #8a7f72;
+  --gray-600:   #5a4a3a;
+  --gray-800:   #1a1612;
+  --text:       #1a1612;
+  --text-sub:   #8a7f72;
+  --text-light: #b08a5e;
+  --border-card: #c8bba8;
+  --shadow-sm:  none;
+  --shadow-md:  none;
+  --radius:     0px;
+  --radius-sm:  0px;
+  --font-body:  'Noto Serif JP', serif;
   --font-title: 'Shippori Mincho', serif;
 }
 
@@ -42,12 +54,23 @@ body {
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.7;
-  color: var(--text);
-  background: var(--white);
+  color: var(--ink);
+  background: var(--paper);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
 }
+/* 和紙テクスチャ風背景 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.app { position: relative; z-index: 1; }
 
 /* =====================================================
    LAYOUT
@@ -79,7 +102,7 @@ body {
   font-family: var(--font-title);
   font-size: 30px;
   font-weight: 700;
-  color: var(--gray-800);
+  color: var(--ink);
   letter-spacing: .04em;
   line-height: 1.25;
 }
@@ -88,20 +111,20 @@ body {
   font-size: 13px;
   font-family: var(--font-body);
   font-weight: 500;
-  color: var(--blue-mid);
+  color: var(--accent);
   letter-spacing: .14em;
   margin-bottom: 4px;
 }
 .section-label {
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  color: var(--blue-mid);
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: var(--muted);
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
 .section-label::after {
   content: '';
@@ -121,16 +144,16 @@ p { line-height: 1.85; }
    CARD
 ===================================================== */
 .card {
-  background: var(--white);
+  background: rgba(255,255,255,0.35);
   border: 1.5px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 0;
   padding: 22px 18px;
   margin-bottom: 14px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 .card-blue {
-  background: var(--blue-ultra);
-  border-color: #bfdbfe;
+  background: var(--cream);
+  border-color: var(--border);
 }
 
 /* =====================================================
@@ -152,37 +175,43 @@ p { line-height: 1.85; }
   min-height: 54px;
 }
 .btn-primary {
-  background: var(--blue);
-  color: var(--white);
-  box-shadow: 0 4px 16px rgba(37,99,235,0.28);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: none;
+  letter-spacing: 2px;
+  border-radius: 0;
 }
-.btn-primary:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+.btn-primary:active { transform: scale(0.98); }
 .btn-outline {
-  background: var(--white);
-  color: var(--blue);
-  border: 2px solid var(--blue-light);
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  letter-spacing: 1px;
 }
-.btn-outline:active { background: var(--blue-ultra); }
+.btn-outline:active { background: var(--ink); color: var(--paper); }
 .btn-ghost {
   background: none;
-  color: var(--text-sub);
-  border: 1.5px solid var(--gray-200);
-  font-size: 14px;
-  padding: 12px 20px;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  padding: 10px 20px;
   min-height: 44px;
   width: auto;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  border-radius: 0;
+  letter-spacing: 1px;
 }
-.btn-ghost:active { background: var(--gray-100); }
+.btn-ghost:active { background: var(--cream); }
 
 /* =====================================================
    INTRO PAGE
 ===================================================== */
 .intro-header {
   padding: 44px 0 28px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
 }
 .intro-kv {
@@ -204,25 +233,26 @@ p { line-height: 1.85; }
   margin-bottom: 20px;
 }
 .feature-box {
-  background: var(--blue-ultra);
-  border: 1.5px solid #bfdbfe;
-  border-radius: var(--radius-sm);
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 14px 12px;
   text-align: center;
 }
-.feature-box-icon { font-size: 20px; margin-bottom: 5px; }
-.feature-box-title { font-size: 12px; font-weight: 700; color: var(--gray-800); margin-bottom: 2px; }
-.feature-box-sub { font-size: 10px; color: var(--text-light); }
+.feature-box-icon { font-size: 18px; margin-bottom: 5px; }
+.feature-box-title { font-size: 11px; font-weight: 600; color: var(--ink); margin-bottom: 2px; letter-spacing: 1px; }
+.feature-box-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
 
 .notice {
-  background: #fefce8;
-  border: 1.5px solid #fde68a;
-  border-radius: var(--radius-sm);
+  background: rgba(212,201,181,0.3);
+  border: 1px solid var(--border);
+  border-radius: 0;
   padding: 12px 14px;
   font-size: 12px;
-  color: #92400e;
+  color: var(--muted);
   line-height: 1.75;
   margin-bottom: 22px;
+  letter-spacing: 0.3px;
 }
 
 /* =====================================================
@@ -232,13 +262,11 @@ p { line-height: 1.85; }
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255,255,255,0.95);
+  background: rgba(245,240,232,0.95);
   backdrop-filter: blur(8px);
-  padding: 14px 0 10px;
-  border-bottom: 1px solid var(--gray-100);
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
   margin: 0 -16px;
-  padding-left: 16px;
-  padding-right: 16px;
 }
 .progress-meta {
   display: flex;
@@ -247,25 +275,26 @@ p { line-height: 1.85; }
   margin-bottom: 8px;
 }
 .progress-q {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-light);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
 }
 .progress-pct {
-  font-size: 12px;
-  font-weight: 900;
-  color: var(--blue);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 1px;
 }
 .progress-track {
-  height: 5px;
-  background: var(--gray-100);
-  border-radius: 999px;
+  height: 3px;
+  background: var(--soft);
+  border-radius: 0;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--blue-light), var(--blue));
-  border-radius: 999px;
+  background: var(--accent);
+  border-radius: 0;
   transition: width .5s cubic-bezier(.4,0,.2,1);
 }
 
@@ -274,23 +303,26 @@ p { line-height: 1.85; }
 }
 .q-cat-badge {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  padding: 4px 13px;
-  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
   margin-bottom: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
 }
-.badge-D { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.badge-O { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
-.badge-E { background: #fdf2f8; color: #9d174d; border: 1px solid #fbcfe8; }
-.badge-S { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.badge-D { border-color: var(--exc); color: var(--exc); }
+.badge-O { border-color: var(--low); color: var(--low); }
+.badge-E { border-color: var(--aes); color: var(--aes); }
+.badge-S { border-color: var(--accent2); color: var(--accent2); }
 
 .q-text {
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.75;
-  color: var(--gray-800);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.9;
+  color: var(--ink);
   margin-bottom: 28px;
   min-height: 80px;
 }
@@ -347,14 +379,14 @@ p { line-height: 1.85; }
 .result-header {
   text-align: center;
   padding: 32px 16px 24px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
 }
 .result-eyebrow {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .18em;
-  color: var(--blue-mid);
+  color: var(--muted);
   text-transform: uppercase;
   margin-bottom: 14px;
 }
@@ -385,8 +417,8 @@ p { line-height: 1.85; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--blue-ultra);
-  border: 2px solid #bfdbfe;
+  background: var(--cream);
+  border: 1.5px solid var(--border);
   border-radius: 14px;
   padding: 12px 22px;
   margin-top: 18px;
@@ -394,9 +426,8 @@ p { line-height: 1.85; }
 .score-big {
   font-size: 34px;
   font-weight: 900;
-  color: var(--blue);
-  font-family: var(--font-body);
-  letter-spacing: -.01em;
+  color: var(--accent);
+  font-family: 'Shippori Mincho', serif;
 }
 .score-meta { text-align: left; }
 .score-meta-label { font-size: 11px; color: var(--text-light); margin-bottom: 2px; }
@@ -422,8 +453,8 @@ p { line-height: 1.85; }
 .gauge-score { font-size: 13px; font-weight: 900; }
 .gauge-track {
   height: 9px;
-  background: var(--gray-100);
-  border-radius: 999px;
+  background: var(--soft);
+  border-radius: 0;
   overflow: hidden;
 }
 .gauge-bar {
@@ -434,9 +465,9 @@ p { line-height: 1.85; }
 
 /* サブタイプ */
 .subtype-hero {
-  background: var(--blue-ultra);
-  border: 2px solid #bfdbfe;
-  border-radius: var(--radius-sm);
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 18px;
   margin-bottom: 12px;
 }
@@ -472,13 +503,13 @@ p { line-height: 1.85; }
   align-items: flex-start;
   padding: 14px;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--gray-200);
+  border: 1.5px solid var(--border);
   margin-bottom: 9px;
-  background: var(--white);
+  background: transparent;
 }
 .strength-row.top {
-  border-color: #bfdbfe;
-  background: var(--blue-ultra);
+  border-color: var(--accent);
+  background: var(--cream);
 }
 .strength-icon { font-size: 22px; min-width: 30px; padding-top: 1px; }
 .strength-name { font-size: 14px; font-weight: 900; color: var(--gray-800); margin-bottom: 4px; }
@@ -486,33 +517,35 @@ p { line-height: 1.85; }
 .strength-desc { font-size: 12px; color: var(--text-sub); line-height: 1.65; }
 
 /* 解説文 */
-.analysis-block { margin-bottom: 18px; }
+.analysis-block { margin-bottom: 24px; }
 .analysis-heading {
+  font-family: 'Shippori Mincho', serif;
   font-size: 15px;
-  font-weight: 900;
-  color: var(--gray-800);
-  padding-left: 11px;
-  border-left: 3px solid var(--blue-mid);
-  margin-bottom: 10px;
-  line-height: 1.45;
+  font-weight: 600;
+  color: var(--ink);
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+  margin-bottom: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
 }
 .analysis-text {
   font-size: 14px;
-  color: var(--text-sub);
-  line-height: 1.9;
+  color: var(--muted);
+  line-height: 1.95;
 }
 .analysis-text p { margin-bottom: 10px; }
 .analysis-text p:last-child { margin-bottom: 0; }
-.analysis-text strong { color: var(--gray-800); font-weight: 700; }
+.analysis-text strong { color: var(--ink); font-weight: 600; }
 .analysis-quote {
-  background: var(--blue-ultra);
-  border-left: 3px solid var(--blue-light);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 12px 14px;
-  margin: 12px 0;
+  background: var(--cream);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0;
+  padding: 14px 16px;
+  margin: 14px 0;
   font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.8;
+  color: var(--muted);
+  line-height: 1.9;
 }
 
 /* アドバイス */
@@ -533,7 +566,7 @@ p { line-height: 1.85; }
    FEEDBACK / PDF SECTION
 ===================================================== */
 .feedback-section {
-  border: 2px solid var(--blue-pale);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius);
   padding: 22px 18px;
   margin-bottom: 14px;
@@ -554,12 +587,12 @@ p { line-height: 1.85; }
 .privacy-note {
   font-size: 11px;
   color: var(--text-light);
-  background: var(--gray-50);
-  border-radius: var(--radius-sm);
+  background: var(--cream);
+  border-radius: 0;
   padding: 10px 12px;
   margin-bottom: 18px;
   line-height: 1.7;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
 }
 .privacy-note strong { color: var(--gray-600); }
 label {
@@ -574,10 +607,10 @@ textarea, input[type="text"], input[type="email"] {
   width: 100%;
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--text);
-  background: var(--gray-50);
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius-sm);
+  color: var(--ink);
+  background: rgba(255,255,255,0.6);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 13px 14px;
   margin-bottom: 16px;
   transition: border-color .15s;
@@ -586,7 +619,7 @@ textarea, input[type="text"], input[type="email"] {
   line-height: 1.7;
 }
 textarea:focus, input:focus {
-  border-color: var(--blue-mid);
+  border-color: var(--accent);
   background: var(--white);
 }
 textarea { resize: vertical; min-height: 110px; }
@@ -631,9 +664,9 @@ textarea { resize: vertical; min-height: 110px; }
 }
 .send-status.sending {
   display: block;
-  background: #eff6ff;
-  border: 1.5px solid #bfdbfe;
-  color: var(--blue);
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  color: var(--accent);
 }
 .send-status.sent {
   display: block;
@@ -643,9 +676,9 @@ textarea { resize: vertical; min-height: 110px; }
 }
 .send-status.error {
   display: block;
-  background: #fff1f2;
-  border: 1.5px solid #fecdd3;
-  color: #be123c;
+  background: rgba(122,90,106,0.1);
+  border: 1.5px solid var(--low);
+  color: var(--low);
 }
 
 /* 免責 */
@@ -692,6 +725,8 @@ textarea { resize: vertical; min-height: 110px; }
 ================================================ -->
 <div id="page-intro" class="page active">
   <div class="intro-header">
+    <div style="width:2px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent));margin:0 auto 24px;animation:growLine 1.2s ease forwards;"></div>
+    <style>@keyframes growLine{from{height:0;opacity:0}to{height:60px;opacity:1}}</style>
     <div class="intro-kv">
       <div>
         <div class="logo-title">
@@ -923,7 +958,7 @@ textarea { resize: vertical; min-height: 110px; }
     <p style="font-size:11px;color:var(--text-light);margin-top:10px;">診断日：<span id="print-date"></span></p>
   </div>
 
-  <p class="disclaimer">
+  <p class="disclaimer" style="font-family:'Noto Serif JP',serif;letter-spacing:1px;">
     このテストはElaine N. Aron博士・Jenn Grannemanらの研究に基づく参考情報です。医療的診断ではありません。長期的な不調や強い苦痛がある場合は、心理士・精神科医などの専門家へご相談ください。
   </p>
 </div>
@@ -1257,7 +1292,7 @@ function makeAnalysis(r){
 
     return `
 <div class="analysis-block">
-  <div class="analysis-heading">あなたはHSP（ハイリー・センシティブ・パーソン）の可能性が高いです</div>
+  <div class="analysis-heading">あなたはHSP（ハイリー・センシティブ・パーソン）です</div>
   <div class="analysis-text">
     <p>今回の総合スコア<strong>${pct}%</strong>は、エレイン・アーロン博士が定義するHSP（Highly Sensitive Person）の特性を色濃く持つ<strong>Orchid（蘭）タイプ</strong>に該当します。Lionetti et al.（2018）のN=906の研究では、このタイプは人口の約<strong>31%</strong>に存在すると示されています。</p>
     <p>HSPとは「刺激に弱い」だけの人ではありません。DOESモデルが示す4軸——<strong>情報の深い処理（D）・過剰刺激（O）・感情と共感（E）・些細な変化への察知（S）</strong>——が組み合わさった多面的な気質です。あなたは${maxDesc}</p>
