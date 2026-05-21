@@ -214,12 +214,7 @@ p { line-height: 1.85; }
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
 }
-.intro-kv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
+
 .intro-tagline {
   font-size: 13px;
   color: var(--text-sub);
@@ -727,57 +722,10 @@ textarea { resize: vertical; min-height: 110px; }
   <div class="intro-header">
     <div style="width:2px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent));margin:0 auto 24px;animation:growLine 1.2s ease forwards;"></div>
     <style>@keyframes growLine{from{height:0;opacity:0}to{height:60px;opacity:1}}</style>
-    <div class="intro-kv">
-      <div>
-        <div class="logo-title">
-          <span>Sensitivity Check</span>
-          HSP型<br>感受性チェック
-        </div>
-      </div>
-      <div style="flex-shrink:0">
-        <svg width="70" height="70" viewBox="0 0 70 70" style="animation:floatY 3s ease-in-out infinite">
-          <!-- タンポポ（イントロ代表花） -->
-          <g transform="translate(35,35)">
-            <line x1="10.0" y1="0.0" x2="22.0" y2="0.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="9.2" y1="3.8" x2="20.3" y2="8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="7.1" y1="7.1" x2="15.6" y2="15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="3.8" y1="9.2" x2="8.4" y2="20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="0.0" y1="10.0" x2="0.0" y2="22.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-3.8" y1="9.2" x2="-8.4" y2="20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-7.1" y1="7.1" x2="-15.6" y2="15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-9.2" y1="3.8" x2="-20.3" y2="8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-10.0" y1="0.0" x2="-22.0" y2="0.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-9.2" y1="-3.8" x2="-20.3" y2="-8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-7.1" y1="-7.1" x2="-15.6" y2="-15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-3.8" y1="-9.2" x2="-8.4" y2="-20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="-0.0" y1="-10.0" x2="-0.0" y2="-22.0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="3.8" y1="-9.2" x2="8.4" y2="-20.3" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="7.1" y1="-7.1" x2="15.6" y2="-15.6" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <line x1="9.2" y1="-3.8" x2="20.3" y2="-8.4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="23.5" cy="0.0" r="2.5" fill="#bfdbfe"/>
-            <circle cx="21.7" cy="9.0" r="2.5" fill="#bfdbfe"/>
-            <circle cx="16.6" cy="16.6" r="2.5" fill="#bfdbfe"/>
-            <circle cx="9.0" cy="21.7" r="2.5" fill="#bfdbfe"/>
-            <circle cx="0.0" cy="23.5" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-9.0" cy="21.7" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-16.6" cy="16.6" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-21.7" cy="9.0" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-23.5" cy="0.0" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-21.7" cy="-9.0" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-16.6" cy="-16.6" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-9.0" cy="-21.7" r="2.5" fill="#bfdbfe"/>
-            <circle cx="-0.0" cy="-23.5" r="2.5" fill="#bfdbfe"/>
-            <circle cx="9.0" cy="-21.7" r="2.5" fill="#bfdbfe"/>
-            <circle cx="16.6" cy="-16.6" r="2.5" fill="#bfdbfe"/>
-            <circle cx="21.7" cy="-9.0" r="2.5" fill="#bfdbfe"/>
-            <circle r="11" fill="#2563eb"/>
-            <circle r="7" fill="#3b82f6"/>
-            <circle cx="-2.5" cy="-2" r="1.5" fill="white"/>
-            <circle cx="2.5" cy="-2" r="1.5" fill="white"/>
-            <path d="M-2,2 Q0,5 2,2" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
-          </g>
-          <line x1="35" y1="57" x2="35" y2="68" stroke="#86efac" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
+    <div style="text-align:center;">
+      <div class="logo-title">
+        <span>Sensitivity Check</span>
+        HSP型<br>感受性チェック
       </div>
     </div>
     <p class="intro-tagline">
@@ -785,11 +733,13 @@ textarea { resize: vertical; min-height: 110px; }
       環境感受性モデルをもとに、あなたの感受性を<br>
       4つの指標で多層的に分析します。
     </p>
-    <div style="display:flex;gap:12px;font-size:13px;color:var(--text-sub);">
-      <span>📋 全50問</span>
-      <span>⏱ 約10分</span>
-      <span>💊 医療診断ではありません</span>
-    </div>
+    <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:4px;">
+      こちらは世界基準での診断をベースにしております。<br>
+      <a href="https://gorgeous-piroshki-7bfadf.netlify.app/" target="_blank"
+         style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;letter-spacing:0.5px;">
+        HSPS-J19（日本版スケール）はこちら
+      </a>
+    </p>
   </div>
 
   <div class="feature-row">
