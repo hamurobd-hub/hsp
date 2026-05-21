@@ -12,34 +12,35 @@
    CSS VARIABLES & RESET
 ===================================================== */
 :root {
-  --ink:        #1a1612;
-  --paper:      #f5f0e8;
-  --cream:      #ede6d6;
-  --accent:     #7c5c3a;
-  --accent2:    #b08a5e;
-  --muted:      #8a7f72;
-  --soft:       #d4c9b5;
-  --border:     #c8bba8;
+  /* ── ウォームグレー × セージグリーン ── */
+  --ink:        #2d2d2b;
+  --paper:      #f0ede8;
+  --cream:      #e8e4de;
+  --accent:     #6b7f6b;
+  --accent2:    #8fa08f;
+  --muted:      #7a7872;
+  --soft:       #cdc9c2;
+  --border:     #bfbbb4;
   --white:      #ffffff;
-  --aes:        #5a7a6a;
-  --low:        #7a5a6a;
-  --exc:        #5a5a7a;
-  /* 旧変数の互換エイリアス */
-  --blue:       #7c5c3a;
-  --blue-mid:   #b08a5e;
-  --blue-light: #d4c9b5;
-  --blue-pale:  #ede6d6;
-  --blue-ultra: #f5f0e8;
-  --gray-50:    #f5f0e8;
-  --gray-100:   #ede6d6;
-  --gray-200:   #d4c9b5;
-  --gray-400:   #8a7f72;
-  --gray-600:   #5a4a3a;
-  --gray-800:   #1a1612;
-  --text:       #1a1612;
-  --text-sub:   #8a7f72;
-  --text-light: #b08a5e;
-  --border-card: #c8bba8;
+  --aes:        #6b7f6b;
+  --low:        #7a7a72;
+  --exc:        #6a7080;
+  /* 互換エイリアス */
+  --blue:       #6b7f6b;
+  --blue-mid:   #8fa08f;
+  --blue-light: #cdc9c2;
+  --blue-pale:  #e8e4de;
+  --blue-ultra: #f0ede8;
+  --gray-50:    #f0ede8;
+  --gray-100:   #e8e4de;
+  --gray-200:   #cdc9c2;
+  --gray-400:   #7a7872;
+  --gray-600:   #4a4a48;
+  --gray-800:   #2d2d2b;
+  --text:       #2d2d2b;
+  --text-sub:   #7a7872;
+  --text-light: #8fa08f;
+  --border-card: #bfbbb4;
   --shadow-sm:  none;
   --shadow-md:  none;
   --radius:     0px;
@@ -66,7 +67,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
 }
@@ -175,7 +176,7 @@ p { line-height: 1.85; }
   min-height: 54px;
 }
 .btn-primary {
-  background: var(--ink);
+  background: var(--accent);
   color: var(--paper);
   box-shadow: none;
   letter-spacing: 2px;
@@ -184,12 +185,12 @@ p { line-height: 1.85; }
 .btn-primary:active { transform: scale(0.98); }
 .btn-outline {
   background: transparent;
-  color: var(--ink);
-  border: 1.5px solid var(--ink);
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
   border-radius: 0;
   letter-spacing: 1px;
 }
-.btn-outline:active { background: var(--ink); color: var(--paper); }
+.btn-outline:active { background: var(--accent); color: var(--paper); }
 .btn-ghost {
   background: none;
   color: var(--muted);
@@ -220,6 +221,7 @@ p { line-height: 1.85; }
   color: var(--text-sub);
   line-height: 1.8;
   margin: 16px 0 28px;
+  text-align: center;
 }
 .feature-row {
   display: grid;
@@ -733,7 +735,7 @@ textarea { resize: vertical; min-height: 110px; }
       環境感受性モデルをもとに、あなたの感受性を<br>
       4つの指標で多層的に分析します。
     </p>
-    <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:4px;">
+    <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:4px;text-align:center;">
       こちらは世界基準での診断をベースにしております。<br>
       <a href="https://gorgeous-piroshki-7bfadf.netlify.app/" target="_blank"
          style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;letter-spacing:0.5px;">
@@ -809,7 +811,7 @@ textarea { resize: vertical; min-height: 110px; }
 
   <!-- タイトル（印刷用） -->
   <div class="print-only" style="text-align:center;padding:20px 0 10px;">
-    <div style="font-family:'Shippori Mincho',serif;font-size:22px;font-weight:700;color:#1e293b;">HSP型 感受性チェック 診断結果</div>
+    <div style="font-family:'Shippori Mincho',serif;font-size:22px;font-weight:700;color:#2d2d2b;">HSP型 感受性チェック 診断結果</div>
   </div>
 
   <!-- ヒーロー -->
@@ -977,10 +979,10 @@ const CAT_BADGE  = {D:"badge-D",O:"badge-O",E:"badge-E",S:"badge-S"};
 const SCALE_LABELS = ["全く当てはまらない","あまり当てはまらない","どちらでもない","やや当てはまる","とても当てはまる"];
 
 const DOES_META = {
-  D:{label:"D — 深く処理する",     color:"#2563eb", track:"#dbeafe"},
-  O:{label:"O — 過剰刺激されやすい",color:"#ea580c", track:"#ffedd5"},
-  E:{label:"E — 感情・共感の強さ",  color:"#db2777", track:"#fce7f3"},
-  S:{label:"S — 些細な察知力",      color:"#16a34a", track:"#dcfce7"},
+  D:{label:"D — 深く処理する",     color:"#6b7f6b", track:"#dde5dd"},
+  O:{label:"O — 過剰刺激されやすい",color:"#7a7a72", track:"#e4e4e0"},
+  E:{label:"E — 感情・共感の強さ",  color:"#6a7080", track:"#e0e2e8"},
+  S:{label:"S — 些細な察知力",      color:"#8fa08f", track:"#e8edea"},
 };
 
 // ================================================
@@ -1174,7 +1176,7 @@ function flowerSVG(type, sz=120){
 function drawRadar(sc){
   const svg=document.getElementById('radar-svg');
   const cx=110,cy=110,r=72,n=4,keys=['D','O','E','S'];
-  const colors={D:'#2563eb',O:'#ea580c',E:'#db2777',S:'#16a34a'};
+  const colors={D:'#6b7f6b',O:'#7a7a72',E:'#6a7080',S:'#8fa08f'};
   const shortNames={D:'深く処理',O:'過剰刺激',E:'感情共感',S:'些細察知'};
   let h='';
   // グリッド
@@ -1183,27 +1185,27 @@ function drawRadar(sc){
       const a=(Math.PI*2*i/n)-Math.PI/2,p=(lv-1)/4;
       return `${(cx+r*p*Math.cos(a)).toFixed(1)},${(cy+r*p*Math.sin(a)).toFixed(1)}`;
     }).join(' ');
-    h+=`<polygon points="${pts}" fill="none" stroke="${lv===3?'#bfdbfe':'#e2e8f0'}" stroke-width="${lv===3?1.5:1}"/>`;
+    h+=`<polygon points="${pts}" fill="none" stroke="${lv===3?'#bfbbb4':'#cdc9c2'}" stroke-width="${lv===3?1.5:1}"/>`;
   }
   // 軸線
   keys.forEach((_,i)=>{
     const a=(Math.PI*2*i/n)-Math.PI/2;
-    h+=`<line x1="${cx}" y1="${cy}" x2="${(cx+r*Math.cos(a)).toFixed(1)}" y2="${(cy+r*Math.sin(a)).toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`;
+    h+=`<line x1="${cx}" y1="${cy}" x2="${(cx+r*Math.cos(a)).toFixed(1)}" y2="${(cy+r*Math.sin(a)).toFixed(1)}" stroke="#cdc9c2" stroke-width="1"/>`;
   });
   // データ領域
   const dp=keys.map((k,i)=>{
     const a=(Math.PI*2*i/n)-Math.PI/2,p=(sc[k]-1)/4;
     return `${(cx+r*p*Math.cos(a)).toFixed(1)},${(cy+r*p*Math.sin(a)).toFixed(1)}`;
   }).join(' ');
-  h+=`<polygon points="${dp}" fill="rgba(37,99,235,0.12)" stroke="#2563eb" stroke-width="2.5"/>`;
+  h+=`<polygon points="${dp}" fill="rgba(107,127,107,0.12)" stroke="#6b7f6b" stroke-width="2"/>`;
   // ドット＋ラベル
   keys.forEach((k,i)=>{
     const a=(Math.PI*2*i/n)-Math.PI/2,p=(sc[k]-1)/4;
     const px=(cx+r*p*Math.cos(a)).toFixed(1),py=(cy+r*p*Math.sin(a)).toFixed(1);
     const lx=(cx+(r+32)*Math.cos(a)).toFixed(1),ly=(cy+(r+32)*Math.sin(a)).toFixed(1);
     h+=`<circle cx="${px}" cy="${py}" r="6" fill="${colors[k]}" stroke="white" stroke-width="2"/>`;
-    h+=`<text x="${lx}" y="${(+ly-7).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b" font-family="'Noto Sans JP',sans-serif">${k}</text>`;
-    h+=`<text x="${lx}" y="${(+ly+5).toFixed(1)}" text-anchor="middle" font-size="9" fill="#64748b" font-family="'Noto Sans JP',sans-serif">${shortNames[k]}</text>`;
+    h+=`<text x="${lx}" y="${(+ly-7).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#2d2d2b" font-family="'Noto Serif JP',serif">${k}</text>`;
+    h+=`<text x="${lx}" y="${(+ly+5).toFixed(1)}" text-anchor="middle" font-size="9" fill="#7a7872" font-family="'Noto Serif JP',serif">${shortNames[k]}</text>`;
   });
   svg.innerHTML=h;
 }
